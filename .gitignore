@@ -68,4 +68,5 @@ local.properties
 .sts4-cache/
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse
-src/ie/atu/sw/lexicons/
+
+out.txt
