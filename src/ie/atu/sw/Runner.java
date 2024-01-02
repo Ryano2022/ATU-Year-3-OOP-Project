@@ -8,6 +8,9 @@ public class Runner {
 		
 		Scanner keyboard = new Scanner(System.in);
 		int choice = 0, quit = 0;
+		String lexiconFile = "";
+		String inputFile = "";
+		String outputFile = "./out.txt";
 		
 		do {
 			//You should put the following code into a menu or Menu class
@@ -30,26 +33,47 @@ public class Runner {
 			System.out.print(ConsoleColour.BLACK_BOLD_BRIGHT);
 			System.out.print("Select Option [1-4]>");
 			System.out.println();
-			
+			System.out.print(ConsoleColour.WHITE);
 			choice = keyboard.nextInt();
 			
 			if(choice == 1) {
 				// Specify a text file.
+				System.out.println("Enter the directory where the input file is located: ");
+				inputFile = keyboard.next();
+				System.out.println("File chosen: " + inputFile);
 			}
 			else if(choice == 2) {
 				// Specify a URL.
+				System.out.println("I don't know what I'm being asked to do here. ");
 			}
-			else if(choice == 3) {
+			else if(choice == 3) {	
 				// Specify an output file. (Default: ./out.txt)
+				System.out.println("Enter the directory where the output file is located: ");
+				outputFile = keyboard.next();
+				System.out.println("File chosen: " + outputFile);
 			}
 			else if(choice == 4) {
 				// Configure lexicons.
+				System.out.println("Enter the directory where the lexicon file is located: ");
+				lexiconFile = keyboard.next();
+				System.out.println("Lexicon chosen: " + lexiconFile);
 			}
 			else if(choice == 5) {
 				// Execute, analyse and report.
+				if(inputFile.isEmpty()) {
+					System.out.println("No input file specified. ");
+				}
+				else if(lexiconFile.isEmpty()) {
+					System.out.println("No lexicon file specified. ");
+				}
+				else {
+					VirtualThreadFileParser vtfp = new VirtualThreadFileParser();
+					vtfp.go(inputFile, lexiconFile);
+				}
 			}
 			else if(choice == 6) {
 				// Optional Extras
+				System.out.println("I don't know what I could add as an extra. The project itself is very hard to wrap my head around as I've never done anything like it. ");
 			}
 			else {
 				// Quit
@@ -97,9 +121,9 @@ public class Runner {
 	 */
 	public static void printProgress(int index, int total) {
 		if (index > total) return;	//Out of range
-        int size = 50; 				//Must be less than console width
-	    char done = '█';			//Change to whatever you like.
-	    char todo = '░';			//Change to whatever you like.
+      int size = 50; 						//Must be less than console width
+	    char done = '█';					//Change to whatever you like.
+	    char todo = '░';					//Change to whatever you like.
 	    
 	    //Compute basic metrics for the meter
         int complete = (100 * index) / total;
