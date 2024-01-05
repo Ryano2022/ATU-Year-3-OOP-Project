@@ -15,11 +15,27 @@ import java.util.stream.Stream;
 import java.util.Map;
 import java.io.FileWriter;
 
+/**
+ * @author Ryan Hogan
+ * @version 1.0
+ * @since 21
+ * 
+ * This class does all the heavy lifting. It does all the calculations and what not.
+ */
+
 public class VirtualThreadFileParser {
     private Collection<String> words = new ConcurrentLinkedDeque<>();
     private Map<String, Integer> lexicon;
     private String outputText;
 
+    /**
+     * This runs the program.
+     * 
+     * @param inputFile This is the path to the file to be parsed through.
+     * @param inputLexicon This is the lexicon to be used.
+     * @param outputFile This is the path to the file to be output to.
+     * @throws Exception
+     */
     public void go(String inputFile, String inputLexicon, String outputFile) throws Exception {
         lexicon = new HashMap<>();
 
@@ -58,12 +74,21 @@ public class VirtualThreadFileParser {
         // Determine the sentiment of the text.
         getSentiment(outputFile);
     }
-
+    
+    /**
+     * This puts the input file in to a collection.
+     * 
+     * @param text This is the input file.
+     */
     public void processInputFile(String text) {
         Arrays.stream(text.split("\\s+")).forEach(w -> words.add(w));
     }
 
-    // Process the lexicon file.
+    /** 
+     * This puts the lexicon words in to a hash map for a key value pair for calculating sentiment.
+     * 
+     * @param text This is the lexicon file.
+     */
     public void processLexiconFile(String text) {
         String[] parts = text.split(",");
         if (parts.length == 2) {
@@ -78,7 +103,12 @@ public class VirtualThreadFileParser {
             }
         }
     }
-
+    
+    /** 
+     * This is the calculation for sentiment.
+     * 
+     * @param outputFile Path to the output file.
+     */
     public void getSentiment(String outputFile) {
         // Determine the sentiment of the text using the lexicon's second column.
         int sentiment = 0;
@@ -106,8 +136,15 @@ public class VirtualThreadFileParser {
             writeSentiment(outputFile, outputText, 0);
         }
     }
-
-    // Write the sentiment to the output file.
+    
+    
+    /**
+     * Write the sentiment to the output file.
+     * 
+     * @param outputFile Path to the output file.
+     * @param toWrite What is going to be written.
+     * @param appendOrOverwrite Should it append or overwrite?
+     */
     public void writeSentiment(String outputFile, String toWrite, int appendOrOverwrite) {
         try {
             FileWriter fileWriter;
@@ -123,7 +160,7 @@ public class VirtualThreadFileParser {
             System.out.println("An error occurred while writing to the file. ");
         }
     }
-
+    
     public static void main(String[] args) throws Exception {
         //new VirtualThreadFileParser().go("./shakespeare.txt");
         //out.println("Lines: " + line);

@@ -2,6 +2,14 @@ package ie.atu.sw;
 
 import java.util.Scanner;
 
+/**
+ * @author Ryan Hogan
+ * @version 1.0
+ * @since 21
+ * 
+ * This class is the <b>main menu</b> of the application. 
+ * It contains a main method and a method to print a progress meter.
+ */
 public class Runner {
 
 	public static void main(String[] args) throws Exception {
