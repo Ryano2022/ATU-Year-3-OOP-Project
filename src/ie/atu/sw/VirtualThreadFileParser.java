@@ -2,6 +2,8 @@ package ie.atu.sw;
 
 import static java.lang.System.out;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -11,12 +13,14 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 import java.util.Map;
+import java.io.FileWriter;
 
 public class VirtualThreadFileParser {
     private Collection<String> words = new ConcurrentLinkedDeque<>();
     private Map<String, Integer> lexicon;
+    private String outputText;
 
-    public void go(String inputFile, String inputLexicon) throws Exception {
+    public void go(String inputFile, String inputLexicon, String outputFile) throws Exception {
         lexicon = new HashMap<>();
 
         // Process the input text file.
@@ -32,6 +36,9 @@ public class VirtualThreadFileParser {
         }
         //out.println(words);
         out.println(words.size() + " words in inputted text file. ");
+        outputText = words.size() + " words in inputted text file. ";
+        // Write to the output file.
+        writeSentiment(outputFile, outputText, 1);
 
         // Process the lexicon file.
         try (var pool = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -45,9 +52,11 @@ public class VirtualThreadFileParser {
             );
         }
         out.println(lexicon.size() + " words in lexicon. ");
+        outputText = lexicon.size() + " words in lexicon. ";
+        writeSentiment(outputFile, outputText, 0);
 
         // Determine the sentiment of the text.
-        getSentiment();
+        getSentiment(outputFile);
     }
 
     public void processInputFile(String text) {
@@ -70,7 +79,7 @@ public class VirtualThreadFileParser {
         }
     }
 
-    public void getSentiment() {
+    public void getSentiment(String outputFile) {
         // Determine the sentiment of the text using the lexicon's second column.
         int sentiment = 0;
         for (String word : words) {
@@ -83,12 +92,35 @@ public class VirtualThreadFileParser {
         // Print the sentiment of the text.
         if (sentiment > 0) {
             out.println("Positive sentiment detected. " + sentiment);
+            outputText = "Positive sentiment detected. " + sentiment;
+            writeSentiment(outputFile, outputText, 0);
         } 
         else if (sentiment < 0) {
             out.println("Negative sentiment detected. " + sentiment);
+            outputText = "Negative sentiment detected. " + sentiment;
+            writeSentiment(outputFile, outputText, 0);
         } 
         else {
             out.println("Neutral sentiment detected." + sentiment);
+            outputText = "Neutral sentiment detected." + sentiment;
+            writeSentiment(outputFile, outputText, 0);
+        }
+    }
+
+    // Write the sentiment to the output file.
+    public void writeSentiment(String outputFile, String toWrite, int appendOrOverwrite) {
+        try {
+            FileWriter fileWriter;
+            if (appendOrOverwrite == 0) {
+                fileWriter = new FileWriter(outputFile, true); 
+            } else {
+                fileWriter = new FileWriter(outputFile); 
+            }
+            PrintWriter writer = new PrintWriter(fileWriter);
+            writer.println(toWrite);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while writing to the file. ");
         }
     }
 

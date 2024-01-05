@@ -48,14 +48,14 @@ public class Runner {
 			}
 			else if(choice == 3) {	
 				// Specify an output file. (Default: ./out.txt)
-				System.out.println("Enter the directory where the output file is located: ");
+				System.out.println("Enter the full path of the output file (default is ./out.txt) ");
 				outputFile = keyboard.next();
 				System.out.println("File chosen: " + outputFile);
 			}
 			else if(choice == 4) {
 				// Configure lexicons.
-				System.out.println("Enter the directory where the lexicon file is located: ");
-				lexiconFile = keyboard.next();
+				System.out.println("Enter the name and file extension of the input file (assume it is in ./lexicons): ");
+				lexiconFile = "./lexicons/" + keyboard.next();
 				System.out.println("Lexicon chosen: " + lexiconFile);
 			}
 			else if(choice == 5) {
@@ -68,7 +68,7 @@ public class Runner {
 				}
 				else {
 					VirtualThreadFileParser vtfp = new VirtualThreadFileParser();
-					vtfp.go(inputFile, lexiconFile);
+					vtfp.go(inputFile, lexiconFile, outputFile);
 				}
 			}
 			else if(choice == 6) {
